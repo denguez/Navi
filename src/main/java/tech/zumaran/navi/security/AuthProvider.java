@@ -11,13 +11,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import tech.zumaran.navi.user.User;
-import tech.zumaran.navi.user.UserService;
 
 @Component
 public class AuthProvider implements AuthenticationProvider {
 	
     @Autowired
-    private UserService userService;
+    private UserDetailsService userService;
     
     @Autowired
     private BCryptPasswordEncoder crypto;
@@ -25,12 +24,10 @@ public class AuthProvider implements AuthenticationProvider {
 	@Override
 	public Authentication authenticate(Authentication attempt) throws AuthenticationException {
 		checkEmpty(attempt);
-		//User user = userService.verifyLock(attempt.getName());
 		User user = userService.findByEmail(attempt.getName());
 		UsernamePasswordAuthenticationToken auth = generateToken(user);
 		
 		if (crypto.matches(attempt.getCredentials().toString(), auth.getCredentials().toString())) {
-			userService.updateLastLogin(user);
 			return auth;
 		} else {
 			throw new AuthenticationServiceException("Failed authentication");
@@ -56,15 +53,5 @@ public class AuthProvider implements AuthenticationProvider {
 	public boolean supports(Class<?> auth) {
 		return auth.equals(UsernamePasswordAuthenticationToken.class);
 	}
-	
-	/*static class AccountLocked extends AuthenticationException {
-
-		private static final long serialVersionUID = 1012338985761323388L;
-
-		public AccountLocked(String msg) {
-			super(msg);
-		}
-		
-	}*/
 	
 }

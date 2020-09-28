@@ -4,31 +4,34 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
-@Table(name = "authorities")
-public class AuthorityEntity implements Serializable {
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-	private static final long serialVersionUID = -8612704090861817831L;
+@Entity
+@NoArgsConstructor
+@Table(name = "authority")
+public class AuthorityEntity implements Serializable {
 	
+	private static final long serialVersionUID = 2372488948350959814L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-	
+	@Getter @Setter private long id;
+
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, unique = true)
-	private Authority authority;
+	@Getter @Setter private Authority authority;
 	
 	public AuthorityEntity(Authority authority) {
 		this.authority = authority;
 	}
 	
-	public AuthorityEntity() {}
-	
-	public Authority getAuthority() {
-		return authority;
-	}
 }

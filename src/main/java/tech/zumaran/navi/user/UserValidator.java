@@ -10,13 +10,15 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+import tech.zumaran.navi.security.UserDetailsService;
+
 @Component
 public class UserValidator implements Validator {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(UserValidator.class);
 	
 	@Autowired
-	private UserService userService;
+	private UserDetailsService userService;
 	
 	@Override
 	public void validate(Object target, Errors errors) {
@@ -37,8 +39,7 @@ public class UserValidator implements Validator {
 		
 		try {
 			userService.findByEmail(user.getEmail());
-			errors.rejectValue("email", "Email.duplicate",
-            		"There's other user registered with this email.");
+			errors.rejectValue("email", "Email.duplicate", "There's other user registered with this email.");
 		} catch (Exception e) {
 			LOG.warn(e.getMessage());
 		}
