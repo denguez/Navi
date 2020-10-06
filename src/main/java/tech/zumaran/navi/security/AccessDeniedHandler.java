@@ -2,7 +2,6 @@ package tech.zumaran.navi.security;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,7 +16,7 @@ public class AccessDeniedHandler implements org.springframework.security.web.acc
 
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,
-			AccessDeniedException accessDeniedException) throws IOException, ServletException {
+			AccessDeniedException accessDeniedException) throws IOException {
 		
 		log.warn(accessDeniedException.getLocalizedMessage());
 		response.sendError(HttpServletResponse.SC_UNAUTHORIZED);

@@ -1,7 +1,5 @@
 package tech.zumaran.navi.authority;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +12,7 @@ public class AuthorityService {
 	
 	@Transactional
 	public AuthorityEntity findByAuthority(Authority authority) {
-		Optional<AuthorityEntity> maybeAuthority = repository.findByAuthority(authority);
+		final var maybeAuthority = repository.findByAuthority(authority);
 		if (maybeAuthority.isPresent())
 			return maybeAuthority.get();
 		else {

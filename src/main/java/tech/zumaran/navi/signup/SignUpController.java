@@ -1,12 +1,10 @@
 package tech.zumaran.navi.signup;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,16 +24,13 @@ public class SignUpController {
 	@PostMapping("/signup")
 	public ResponseEntity<SignUpResponse> signup(@RequestBody User user, BindingResult result) {
 		userValidator.validate(user, result);
+		
         if (result.hasErrors()) {
-        	List<ObjectError> allErrors = result.getAllErrors();
-        	
-        	String errors = allErrors == null? "No message available" 
-    						: "Invalid user " + user.getEmail() + " " 
-    						+ allErrors.stream()
+        	String errors = result.getAllErrors().stream()
     							.map(err -> err.getDefaultMessage())
     							.collect(Collectors.joining(", "));
         	
-        	return ResponseEntity.badRequest().body(new SignUpResponse("Invalid user. " + errors, user));
+        	return ResponseEntity.badRequest().body(new SignUpResponse("Invalid user " + errors, user));
         } else {
         	return ResponseEntity.ok(new SignUpResponse("Signed up successfully!", signUpService.signup(user)));
         }

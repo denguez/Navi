@@ -1,9 +1,8 @@
-package tech.zumaran.navi.security;
+	package tech.zumaran.navi.security;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,11 +29,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private SignInFailureHandler loginFailure;
     
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
+    @Autowired
+    private BCryptPasswordEncoder crypto;
+    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
     	http
@@ -54,8 +51,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.and()
 		.exceptionHandling()
 			.authenticationEntryPoint((req, resp, exc) -> {
-				log.info(exc.getMessage());
-				resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+				log.info("{} {}", exc.getMessage(), req.getRequestURL().toString());
+				resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 			})
 		.and()
 		.csrf()
@@ -64,7 +61,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    	auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder());
+    	auth.userDetailsService(userService).passwordEncoder(crypto);
     	auth.authenticationProvider(authProvider);
     }
 }

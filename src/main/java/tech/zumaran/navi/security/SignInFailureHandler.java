@@ -1,5 +1,7 @@
 package tech.zumaran.navi.security;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,10 +17,10 @@ public class SignInFailureHandler implements AuthenticationFailureHandler {
 
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, 
-			HttpServletResponse response, AuthenticationException exception) {
+			HttpServletResponse response, AuthenticationException exception) throws IOException {
 		
 		log.warn(exception.getMessage());
-		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 	}
 
 }

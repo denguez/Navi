@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Getter@Setter
 @NoArgsConstructor
 @Table(name = "authority")
 public class AuthorityEntity implements Serializable {
@@ -24,11 +25,11 @@ public class AuthorityEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Getter @Setter private long id;
+	private long id;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, unique = true)
-	@Getter @Setter private Authority authority;
+	private Authority authority;
 	
 	public AuthorityEntity(Authority authority) {
 		this.authority = authority;

@@ -25,7 +25,9 @@ public class AuthProvider implements AuthenticationProvider {
 	public Authentication authenticate(Authentication attempt) throws AuthenticationException {
 		checkEmpty(attempt);
 		User user = userService.findByEmail(attempt.getName());
-		UsernamePasswordAuthenticationToken auth = generateToken(user);
+		
+		final var auth = new UsernamePasswordAuthenticationToken(
+				user.getEmail(), user.getPassword(), user.getAuthorities());;
 		
 		if (crypto.matches(attempt.getCredentials().toString(), auth.getCredentials().toString())) {
 			return auth;
@@ -43,10 +45,6 @@ public class AuthProvider implements AuthenticationProvider {
 		
 		if (attempt.getCredentials() == null) 
 			throw new AuthenticationCredentialsNotFoundException("Missing credentials");
-	}
-	
-	private static UsernamePasswordAuthenticationToken generateToken(User user) {
-		return new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword(), user.getAuthorities());
 	}
 
 	@Override

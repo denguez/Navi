@@ -1,7 +1,6 @@
 package tech.zumaran.navi.security;
 
 import java.sql.Timestamp;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,11 +19,11 @@ public class UserDetailsService implements org.springframework.security.core.use
 	
 	@Transactional(readOnly = true, noRollbackFor = UsernameNotFoundException.class)
 	public User findByEmail(String email)  {
-		Optional<User> user = userRepository.findByEmail(email);
+		final var user = userRepository.findByEmail(email);
 		if (user.isPresent()) 
 			return user.get();
 		else 
-			throw new UsernameNotFoundException(email);
+			throw new UsernameNotFoundException("User not found " + email);
 	}
 
 	@Override
